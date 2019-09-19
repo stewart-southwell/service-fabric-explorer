@@ -24,6 +24,7 @@ module Sfx {
             "dataService",
             "controllerManagerService",
             "authenticationController",
+            "findByPartitionController",
             "treeViewController",
             "navbarController",
             "clusterViewController",

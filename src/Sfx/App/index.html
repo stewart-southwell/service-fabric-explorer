@@ -160,6 +160,7 @@
 
     <script type="text/ng-template" id="treeViewPanel">
         <div class="tree-header">
+            <button ng-click="treeCtrl.openFindPartitionByIdModal()"></button>
             <div class="toolbar container-fluid">
                 <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showOkItems}" ng-click="treeCtrl.tree.showOkItems = !treeCtrl.tree.showOkItems">
                     <sfx-badge badge-class="'badge-ok'" text="'OK'"></sfx-badge>
