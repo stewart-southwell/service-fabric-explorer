@@ -5,6 +5,7 @@ $tree-node-line-height: 23px;
 .tree-header {
     white-space: nowrap;
     color: $tree-color;
+    padding: 10px 23px 10px 20px;
 
     .toolbar {
         margin-top: 16px;
@@ -22,11 +23,7 @@ $tree-node-line-height: 23px;
 .tree-body {
     overflow-x: auto;
     overflow-y: auto;
-    position: absolute;
     bottom: $page-padding-bottom;
-    top: 108px;
-    left: 0;
-    right: 0;
     color: $tree-color;
 
     .informative {

@@ -1,17 +1,16 @@
-<form name="createApplicationForm">
+<form name="createApplicationForm" class="typeahead-demo">
     <div class="modal-header">
         <h4 class="modal-title">Get Partition info by Id</h4>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="max-height: 100%; overflow-y: visible">
         <p>find a partition</p>
-        <div>
-            <div ng-repeat="node in ctrl.nodes">
-                    {{node.name}}
-            </div>
-        </div>
+            <sfx-search-bar placeholder="Partition ID" model="ctrl.partitionId"></sfx-search-bar>
     </div>
-    <!-- <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" data-dismiss="modal" ng-disabled="createApplicationForm.$invalid" ng-click="ok()">View</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">Cancel</button>
-    </div> -->
+    <div ng-if="ctrl.status" style="text-align: center; margin: 10px;" ng-style="{'color': ctrl.isError ? 'red' : 'inherit'}">
+        {{ctrl.status}}
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" data-dismiss="modal" ng-click="ctrl.search()">Find</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ctrl.close()">Cancel</button>
+    </div>
 </form>

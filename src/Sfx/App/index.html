@@ -160,9 +160,9 @@
 
     <script type="text/ng-template" id="treeViewPanel">
         <div class="tree-header">
-            <div ng-controller="MessageController as msgCtrl">
-                    <button ng-click="treeCtrl.openFindPartitionByIdModal()"></button>
-            </div>
+            <!-- <div ng-controller="FindByPartitionWrapper as c"> -->
+                    <button class="btn btn-primary" ng-click="treeCtrl.openFindPartitionByIdModal()">Find partition</button>
+            <!-- </div> -->
             <div class="toolbar container-fluid">
                 <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showOkItems}" ng-click="treeCtrl.tree.showOkItems = !treeCtrl.tree.showOkItems">
                     <sfx-badge badge-class="'badge-ok'" text="'OK'"></sfx-badge>

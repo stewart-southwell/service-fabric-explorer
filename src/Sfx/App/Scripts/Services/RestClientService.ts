@@ -438,6 +438,18 @@ module Sfx {
             return this.post(this.getApiUrl(url), "Service update", updateServiceDescription, messageHandler);
         }
 
+        public getServiceNameInfo(partitionId: string, messageHandler?: IResponseMessageHandler): angular.IHttpPromise<IRawServiceNameInfo> {
+            let url = `Partitions/${partitionId}/$/GetServiceName`;
+
+            return this.get(this.getApiUrl(url), "Get service", messageHandler);
+        }
+
+        public getApplicationNameInfo(serviceId: string, messageHandler?: IResponseMessageHandler): angular.IHttpPromise<IRawApplicationNameInfo> {
+            let url = `Services/${serviceId}/$/GetApplicationName`;
+
+            return this.get(this.getApiUrl(url), "Get service", messageHandler);
+        }
+
         public enableApplicationBackup(application: Application, messageHandler?: IResponseMessageHandler): angular.IHttpPromise<{}> {
             let url = "Applications/" + encodeURIComponent(application.id) + "/$/EnableBackup";
             return this.post(this.getApiUrl(url, RestClient.apiVersion64), "Enable Application Backup", { BackupPolicyName: application.backupPolicyName }, messageHandler);

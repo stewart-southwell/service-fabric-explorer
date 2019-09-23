@@ -859,4 +859,13 @@ module Sfx {
         }
     }
 
+    export interface IRawApplicationNameInfo{
+        Id: string;
+        Name: string;
+    }
+    export interface IRawServiceNameInfo{
+        Id: string;
+        Name: string;
+    }
+
 }

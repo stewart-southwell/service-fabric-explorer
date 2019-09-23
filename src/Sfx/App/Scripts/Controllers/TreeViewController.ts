@@ -4,55 +4,7 @@
 //-----------------------------------------------------------------------------
 
 module Sfx {
-    export class FindByPartitionWrapper {
-        public static $inject = ["dataService"];
-
-        constructor(data: DataService){
-            console.log(data);
-        }
-        openFindPartitionByIdModal(): void {
-            // console.log(this.data.$uibModal.open({
-            //     templateUrl: "partials/find-partition-dialog.html",
-            //     controller: FindPartitionByIdController,
-            //     controllerAs: "ctrl"
-            // })
-            // this.data = this.$injector.get<DataService>("data");
-
-            this.data.$uibModal.open({
-                templateUrl: "partials/find-partition-dialog.html",
-                controller: FindPartitionByIdController,
-                controllerAs: "ctrl"
-            })
-
-            //this.data = this.$injector.get<DataService>("data");
-            // let modal = this.data.$uibModal.open({
-            //     templateUrl: "partials/find-partition-dialog.html",
-            //     controller: FindPartitionByIdController,
-            //     controllerAs: "ctrl"
-            // });
-            
-            // new ActionWithDialog(
-            //     this.data.$uibModal,
-            //     this.data.$q,
-            //     "disableApplicationBackup",
-            //     "Disable Application Backup",
-            //     "Disabling Application Backup",
-            //     () => null,
-            //     () => true,
-            //     <angular.ui.bootstrap.IModalSettings>{
-            //         templateUrl: "partials/disableBackup.html",
-            //         controller: ActionController,
-            //         resolve: {
-            //             action: () => this
-            //         }
-            //     },
-            //     null
-            // )
-        }
-    }
-
     export class TreeViewController extends ControllerWithResolver {
-        public static $inject = ["dataService"];
 
         private treeService: ClusterTreeService;
 
@@ -60,20 +12,25 @@ module Sfx {
             return this.treeService.tree;
         }
 
-
-
         constructor($injector: angular.auto.IInjectorService) {
             super($injector);
 
             this.treeService = $injector.get<ClusterTreeService>("clusterTree");
         }
+
+        openFindPartitionByIdModal(): void {
+            this.data.$uibModal.open({
+                templateUrl: "partials/find-partition-dialog.html",
+                controller: FindPartitionByIdController,
+                controllerAs: "ctrl"
+            });
+        }
     }
 
     (function () {
 
-        let module = angular.module("treeViewController", ["dataService"]);
+        let module = angular.module("treeViewController", []);
 
         module.controller("TreeViewController", ["$injector", TreeViewController]);
-        module.controller("FindByPartitionWrapper", [FindByPartitionWrapper])
     })();
 }

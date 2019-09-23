@@ -6,44 +6,53 @@
 module Sfx {
 
     export class FindPartitionByIdController {
-        static $inject = ["$scope", "dataService"];
-
-        exhaustiveQueryName: string = "Exhaustive";
-
-        nodeName: string = "";
-        nodes: Node[] = [];
-        partitionId: string = "";
+        static $inject = ["data", "$uibModalInstance"];
         
-        // clusterUpgradeProgress: ClusterUpgradeProgress;
+        partitionId: string = "04ce1925-3a10-40da-b214-9fa45c60e5da";
+        status = "";
+        isError = false;
 
-        constructor(private data: DataService, private $scope: any, private $q: angular.IQService) {
-            this.data.getNodes().then(nodeCollection => {
-                this.nodes = nodeCollection.collection;
-            })
+        $uibModalInstance;
+
+        constructor(private data: DataService, $uibModalInstance: angular.ui.bootstrap.IModalServiceInstance) {
+            this.$uibModalInstance = $uibModalInstance;
         }
 
         search() {
-            if(this.nodeName === this.exhaustiveQueryName){
-                this.data.getNodes().then(nodeCollection => {
-                    this.nodes = nodeCollection.collection;
-                    const promises = this.nodes.map(node => this.data.restClient.findServiceByPartitionId(node.name, this.partitionId));
+            this.status = "";
+            this.isError = false;
 
-                    return this.$q.all(promises)
-                }).then( resolves => {
-                    console.log(resolves);
-                })
-            }else{
-                this.data.restClient.findServiceByPartitionId(this.nodeName, this.partitionId).then(partition => {
-                    console.log(partition);
-                })
-            }
+            let serviceInfo;
+            Utils.getHttpResponseData(this.data.restClient.getServiceNameInfo(this.partitionId)).then(info => {
+                serviceInfo = info;
+                this.status = "Found Service name";
+                return Utils.getHttpResponseData(this.data.restClient.getApplicationNameInfo(info.Id));
+            }).then(appName => {
+                this.status = "Found application name";
+                return this.data.getApp(appName.Id).catch( ()=> {return null})
+            }).then( appInfo => {
+                if(appInfo){
+                    this.data.routes.navigate( ()=> this.data.routes.getPartitionViewPath(appInfo.raw.TypeName, appInfo.id, serviceInfo.Id, this.partitionId));
+                    this.close();
+                }else{
+                    this.status = "Could not find application Type";
+                    this.isError = true;
+                }
+            }).catch( err => {
+                this.status = err.data.Error.Message;
+                this.isError = true;
+            })
+        }
+
+        close(){
+            this.$uibModalInstance.close();
         }
     }
 
     (function () {
 
         let module = angular.module("findByPartitionController", []);
-        module.controller("FindByPartitionController", ["data", "$scope", FindPartitionByIdController]);
+        module.controller("FindByPartitionController", FindPartitionByIdController);
 
     })();
 }
