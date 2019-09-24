@@ -1,10 +1,24 @@
 <form name="createApplicationForm" class="typeahead-demo">
     <div class="modal-header">
-        <h4 class="modal-title">Get Partition info by Id</h4>
+        <h4 class="modal-title">Find entity by Id</h4>
     </div>
+
     <div class="modal-body" style="max-height: 100%; overflow-y: visible">
-        <p>find a partition</p>
-            <sfx-search-bar placeholder="Partition ID" model="ctrl.partitionId"></sfx-search-bar>
+        <!-- <p>find a {{ctrl.currentChoice}}</p> -->
+        <div style="display: flex;">
+            <span uib-dropdown >
+                <button style="padding: 0px 16px 3px;" type="submit" class="btn btn-primary" data-dismiss="modal" id="simple-dropdown" uib-dropdown-toggle>{{ctrl.currentChoice}}
+                        <span class="bowtie-icon bowtie-chevron-down" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true" aria-label="settings" title="settings"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                    <li ng-repeat="choice in ctrl.choices">
+                    <a href ng-click="ctrl.currentChoice = choice;" ng-if="ctrl.currentChoice !== choice">{{choice}}</a>
+                    </li>
+                </ul>
+            </span> 
+            <sfx-search-bar placeholder="Partition ID" model="ctrl.partitionId" style="flex: 1 0 0;"></sfx-search-bar>
+        </div>
     </div>
     <div ng-if="ctrl.status" style="text-align: center; margin: 10px;" ng-style="{'color': ctrl.isError ? 'red' : 'inherit'}">
         {{ctrl.status}}

@@ -8,6 +8,9 @@ module Sfx {
     export class FindPartitionByIdController {
         static $inject = ["data", "$uibModalInstance"];
         
+        choices: string[] = ["Partition", "Service"]
+        currentChoice = this.choices[0];
+
         partitionId: string = "04ce1925-3a10-40da-b214-9fa45c60e5da";
         status = "";
         isError = false;
@@ -18,29 +21,60 @@ module Sfx {
             this.$uibModalInstance = $uibModalInstance;
         }
 
+        private setText(text: string): void {
+            this.status = text;
+        }
+
         search() {
             this.status = "";
             this.isError = false;
+            this.findPartitionInfo().catch( err => {
+                this.status = err.data.Error.Message;
+                this.isError = true;
+            })
+        }
 
+        findPartitionInfo(): angular.IPromise<any>{             
             let serviceInfo;
-            Utils.getHttpResponseData(this.data.restClient.getServiceNameInfo(this.partitionId)).then(info => {
+            return Utils.getHttpResponseData(this.data.restClient.getServiceNameInfo(this.partitionId)).then(info => {
                 serviceInfo = info;
-                this.status = "Found Service name";
+                this.setText("Found Service name");
                 return Utils.getHttpResponseData(this.data.restClient.getApplicationNameInfo(info.Id));
             }).then(appName => {
-                this.status = "Found application name";
+                this.setText("Found application name");
                 return this.data.getApp(appName.Id).catch( ()=> {return null})
             }).then( appInfo => {
                 if(appInfo){
                     this.data.routes.navigate( ()=> this.data.routes.getPartitionViewPath(appInfo.raw.TypeName, appInfo.id, serviceInfo.Id, this.partitionId));
                     this.close();
                 }else{
-                    this.status = "Could not find application Type";
+                    this.setText("Could not find application Type");
                     this.isError = true;
                 }
-            }).catch( err => {
-                this.status = err.data.Error.Message;
-                this.isError = true;
+            })
+        }
+
+
+        findServiceInfoByPartitionId(partitionId: string, data: any): angular.IPromise<any>{
+            return this.data.$q( (resolve, reject) => {
+                Utils.getHttpResponseData(this.data.restClient.getServiceNameInfo(partitionId)).then(info => {
+                    data.serviceInfo = info;
+                    this.setText("Found Service name");
+                    resolve(data);
+                }).catch(err => {
+                    reject({error: "Could not find application Type"});
+                })
+            })
+        }
+
+        findAppInfoByServiceName(name: string, data: any): angular.IPromise<any>{
+            return this.data.$q( (resolve, reject) => {
+                this.data.getApp(name).then(info => {
+                    data.appTypeName = info.raw.TypeName;
+                    resolve(data);
+                }).catch(err => {
+                    reject({error: "Could not find application Type"});
+                })
             })
         }
 
