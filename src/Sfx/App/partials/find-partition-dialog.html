@@ -1,23 +1,33 @@
 <form name="createApplicationForm" class="typeahead-demo">
+    <script type="text/ng-template" id="customTemplate.html">
+        <a>
+            <div>{{match | json}}</div>
+            <span ng-bind-html="match | uibTypeaheadHighlight:query"></span>
+        </a>
+        </script>
     <div class="modal-header">
         <h4 class="modal-title">Find entity by Id</h4>
     </div>
 
     <div class="modal-body" style="max-height: 100%; overflow-y: visible">
-        <!-- <p>find a {{ctrl.currentChoice}}</p> -->
+        <p>Example : "{{ctrl.currentChoice.example}}"</p>
         <div style="display: flex;">
             <span uib-dropdown >
-                <button style="padding: 0px 16px 3px;" type="submit" class="btn btn-primary" data-dismiss="modal" id="simple-dropdown" uib-dropdown-toggle>{{ctrl.currentChoice}}
+                <button style="padding: 0px 16px 3px;" type="submit" class="btn btn-primary" data-dismiss="modal" id="simple-dropdown" uib-dropdown-toggle>{{ctrl.currentChoice.name}}
                         <span class="bowtie-icon bowtie-chevron-down" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="true" aria-label="settings" title="settings"></span>
                 </button>
                 <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
                     <li ng-repeat="choice in ctrl.choices">
-                    <a href ng-click="ctrl.currentChoice = choice;" ng-if="ctrl.currentChoice !== choice">{{choice}}</a>
+                    <a href ng-click="ctrl.currentChoice = choice;" ng-if="ctrl.currentChoice.name !== choice.name">{{choice.name}}</a>
                     </li>
                 </ul>
             </span> 
-            <sfx-search-bar placeholder="Partition ID" model="ctrl.partitionId" style="flex: 1 0 0;"></sfx-search-bar>
+            <sfx-search-bar placeholder="{{ctrl.currentChoice.inputLabel}}" model="ctrl.partitionId" style="flex: 1 0 0;"></sfx-search-bar>
+        </div>
+        <div ng-if="ctrl.currentChoice.requiresNode">
+            <input type="text" ng-model="ctrl.nodeName" placeholder="Node Id" uib-typeahead="node for node in ctrl.nodes | filter:$viewValue"
+            class="input-flat important-transparent" typeahead-show-hint="true" typeahead-min-length="0" style="background-color: #242424 !important;">    
         </div>
     </div>
     <div ng-if="ctrl.status" style="text-align: center; margin: 10px;" ng-style="{'color': ctrl.isError ? 'red' : 'inherit'}">

@@ -704,7 +704,7 @@ module Sfx {
             return this.post(this.getApiUrl(url), "Replica deletion", null, messageHandler);
         }
 
-        public findServiceByPartitionId(nodeName: string, partitionId: string, messageHandler?: IResponseMessageHandler): angular.IHttpPromise<IRawDeployedReplicaDetail> {
+        public FindDeployedServiceReplicaDetailByPartitionId(nodeName: string, partitionId: string, messageHandler?: IResponseMessageHandler): angular.IHttpPromise<IRawDeployedReplicaDetail> {
             let url = `Nodes/${nodeName}/$/GetPartitions/${partitionId}/$/GetReplicas`
 
             return this.get(this.getApiUrl(url), "finding service by partition ID", messageHandler);
