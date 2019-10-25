@@ -50,7 +50,6 @@ module Sfx {
             this.$uibModalInstance = $uibModalInstance;
             this.data.getNodes().then(data => {
                 this.nodes = data.collection.map(node => node.name);
-                console.log(this.nodes);
             })
         }
 
@@ -86,7 +85,7 @@ module Sfx {
                     break;
                 case "Deployed Service Pkg":
                     promise = this.findDeployServiceReplicaInfo(this.model, this.nodeName, data).then( data => {
-                        // this.data.routes.navigate( () => this.data.routes.getDeployedReplicaViewPath(data.appTypeName, data.applicationId))
+                        this.data.routes.navigate( () => this.data.routes.getDeployedReplicaViewPath(data.appTypeName, data.applicationId))
                         this.close();
                     })
                     break;
@@ -99,26 +98,6 @@ module Sfx {
             })
         }
         
-        // findPartitionInfo(partitionId: string, data: any): angular.IPromise<any>{             
-        //     let serviceInfo;
-        //     return Utils.getHttpResponseData(this.data.restClient.getServiceNameInfo(partitionId)).then(info => {
-        //         serviceInfo = info;
-        //         this.setText("Found Service name");
-        //         return Utils.getHttpResponseData(this.data.restClient.getApplicationNameInfo(info.Id));
-        //     }).then(appName => {
-        //         this.setText("Found application name");
-        //         return this.data.getApp(appName.Id).catch( ()=> {return null})
-        //     }).then( appInfo => {
-        //         if(appInfo){
-        //             this.data.routes.navigate( ()=> this.data.routes.getPartitionViewPath(appInfo.raw.TypeName, appInfo.id, serviceInfo.Id, this.partitionId));
-        //             this.close();
-        //         }else{
-        //             this.setText("Could not find application Type");
-        //             this.isError = true;
-        //         }
-        //     })
-        // }
-
         findServiceInfo(serviceName: string, data: any): angular.IPromise<any>{
             data.serviceId = serviceName.replace("fabric:/", "");
             return this.findAppInfoByServiceName(serviceName.replace("fabric:/", ""), data);
@@ -132,7 +111,7 @@ module Sfx {
                     data.appTypeName = info.raw.TypeName;
                     resolve(data);
                 }).catch(err => {
-                    reject({error: "Could not find application Type"});
+                    reject({error: "Could not find application"});
                 })
             })
         }
@@ -147,8 +126,7 @@ module Sfx {
                         resolve(data);
                     }).catch( err => reject(err));
                 }).catch(err => {
-                    console.log("test");
-                    reject({error: "Could not find application Type"});
+                    reject({error: "Could not find corresponding Service"});
                 })
             })
         }
@@ -176,8 +154,7 @@ module Sfx {
                     data.appTypeName = info.raw.TypeName;
                     resolve(data);
                 }).catch(err => {
-                    console.log("rekect")
-                    reject({error: "Could not find application Type"});
+                    reject({error: "Could not find corresponding application Type"});
                 })
             })
         }
