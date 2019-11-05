@@ -5,6 +5,11 @@
 
 module Sfx {
 
+    function test(controller: ServiceViewController, messageHandler?: IResponseMessageHandler): angular.IPromise<any> {
+        console.log(controller)
+        return controller.data.$q.when(null);
+    }
+
     export interface IServiceViewScope extends angular.IScope {
         service: Service;
         serviceManifest: string;
@@ -13,6 +18,7 @@ module Sfx {
         unhealthyEvaluationsListSettings: ListSettings;
         serviceEvents: ServiceEventList;
         serviceBackupConfigurationInfoListSettings: ListSettings;
+        additionalTabs: any;
     }
 
     export class ServiceViewController extends MainViewController {
@@ -31,6 +37,20 @@ module Sfx {
             this.tabs["manifest"].refresh = (messageHandler) => this.refreshManifest(messageHandler);
             this.tabs["events"].refresh = (messageHandler) => this.refreshEvents(messageHandler);
 
+            this.$scope.additionalTabs = [
+                {name: "test1"},
+                {name: "test2"},
+                {name: "test3"},
+                {name: "test4"},
+                {name: "test5"}
+            ]
+
+            this.$scope.additionalTabs.forEach(tab => {
+                this.tabs[tab.name] = {name: tab.name}
+                this.tabs[tab.name].refresh = (messageHandler) => test(this, messageHandler);
+            })
+
+            console.log(this.tabs)
             let routeParams = this.routeParams;
             this.appTypeName = IdUtils.getAppTypeName(routeParams);
             this.appId = IdUtils.getAppId(routeParams);

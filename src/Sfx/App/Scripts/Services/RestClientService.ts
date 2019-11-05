@@ -789,6 +789,12 @@ module Sfx {
                 });
         }
 
+        public getRepairTasks(taskIdFilter: string = "", stateFilter?: number, ExecutorFilter: string = "", messageHandler?: IResponseMessageHandler): angular.IHttpPromise<IRawRepairTask[]> {
+            let url = `$/GetRepairTaskList?api-version=6.0&TaskIdFilter=${taskIdFilter}&StateFilter=${stateFilter}&ExecutorFilter=${ExecutorFilter}`;
+
+            return this.get(this.getApiUrl(url), "Get repair tasks", messageHandler);
+        }
+
         /**
          * Appends apiVersion and a random token to aid in working with the brower's cache.
          * @param path The Input URI path.

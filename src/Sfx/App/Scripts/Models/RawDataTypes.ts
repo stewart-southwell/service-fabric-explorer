@@ -827,6 +827,27 @@ module Sfx {
         errorCount: number;
     }
 
+    export interface IRawRepairTask {
+        TaskId: string;
+        Version?: string;
+        Description?: string;
+        State: string;
+        Flags?: number;
+        Action: string;
+        Target: any; //TODO
+        Executor?: string;
+        ExecutorData?: string;
+        Impact: any; // TODO
+        ResultStatus?: string;
+        ResultCode?: number;
+        ResultDetail?: string;
+        History: any; //todo
+        PreparingHealthCheckState?: string;
+        RestoringHealthCheckState?: string;
+        PerformPreparingHealthCheck?: boolean;
+        PerformRestoringHealthCheck?: boolean;
+    }
+
     export class NodeStatusDetails implements INodesStatusDetails {
         public nodeType: string;
         public statusTypeCounts: Record<string, number>;

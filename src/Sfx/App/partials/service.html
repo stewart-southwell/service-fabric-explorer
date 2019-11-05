@@ -118,4 +118,11 @@
         <sfx-events-view events-list="serviceEvents" class="flex-child"></sfx-events-view>
     </script>
 
+    <div ng-repeat="tab in additionalTabs" >
+        <script type="text/ng-template" id="tab_{{tab.name}}">
+            <div>
+                {{tab | json}}
+            </div>
+        </script>        
+    </div>
 </div>
