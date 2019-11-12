@@ -34,6 +34,10 @@ module Sfx {
         settings: SettingsService;
         clusterEvents: ClusterEventList;
         clusterTimelineGenerator: ClusterTimelineGenerator;
+
+        //temp
+        repairTasks: RepairTask[];
+        repairTaskListSettings: ListSettings;
     }
 
     export class ClusterViewController extends MainViewController {
@@ -90,6 +94,29 @@ module Sfx {
             this.$scope.backupPolicies = this.data.backupPolicies;
             this.$scope.settings = this.settings;
             this.$scope.clusterTimelineGenerator = new ClusterTimelineGenerator();
+
+            this.$scope.repairTaskListSettings = this.settings.getNewOrExistingListSettings("repair", null,
+                [
+                    new ListColumnSetting("raw.Action", "Action"),
+                    new ListColumnSetting("raw.State", "State"),
+                    new ListColumnSetting("raw.TaskId", "TaskId"),
+                    new ListColumnSetting("raw.History.CompletedUtcTimestamp", "CompletedUtcTimestamp"),
+                    new ListColumnSetting("raw.History.ApprovedUtcTimestamp", "ApprovedUtcTimestamp")
+                ],
+                [new ListColumnSetting(
+                    "",
+                    "",
+                    [],
+                    null,
+                    (item) => {
+                        let json = `${JSON.stringify(item.raw, null, "&nbsp;")}`;
+                    return `<div style="margin-left:20px">${json.replace(new RegExp("\\n", "g"), "<br/>")}</div>`;
+                    },
+                -1)],  
+                true,
+                (item) => (Object.keys(item.raw).length > 0),
+                true);
+
             this.refresh();
 
             this.$scope.nodes.refresh().then( () => {
@@ -129,6 +156,10 @@ module Sfx {
 
                     clusterHealth.checkExpiredCertStatus();
                 }));
+
+            promises.push(this.data.restClient.getRepairTasks("",127).then(data => {
+                this.$scope.repairTasks = data.data.map(item => new RepairTask(item))
+            }))
 
             // For upgrade dashboard
             promises.push(this.data.getApps(true, messageHandler)

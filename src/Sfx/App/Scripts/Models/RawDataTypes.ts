@@ -827,6 +827,30 @@ module Sfx {
         errorCount: number;
     }
 
+    export interface IRawNodeImpact {
+        NodeName : string;
+        ImpactLevel	?: string;
+    }
+
+    export interface IRawNodeRepairImpactDescription {
+        Kind : string;
+        NodeImpactList : IRawNodeImpact[]
+    }
+
+    export interface IRawRepairTaskHistory {
+        CreatedUtcTimestamp ?: string;
+        ClaimedUtcTimestamp ?: string;
+        PreparingUtcTimestamp ?: string; 
+        ApprovedUtcTimestamp ?: string;
+        ExecutingUtcTimestamp ?: string;
+        RestoringUtcTimestamp ?: string;
+        CompletedUtcTimestamp ?: string;
+        PreparingHealthCheckStartUtcTimestamp ?: string;
+        PreparingHealthCheckEndUtcTimestamp ?: string;
+        RestoringHealthCheckStartUtcTimestamp ?: string;
+        RestoringHealthCheckEndUtcTimestamp ?: string;
+    }
+
     export interface IRawRepairTask {
         TaskId: string;
         Version?: string;
@@ -834,14 +858,14 @@ module Sfx {
         State: string;
         Flags?: number;
         Action: string;
-        Target: any; //TODO
+        Target?: IRawNodeRepairImpactDescription; 
         Executor?: string;
         ExecutorData?: string;
-        Impact: any; // TODO
+        Impact?: IRawNodeRepairImpactDescription; 
         ResultStatus?: string;
         ResultCode?: number;
         ResultDetail?: string;
-        History: any; //todo
+        History?: IRawRepairTaskHistory;
         PreparingHealthCheckState?: string;
         RestoringHealthCheckState?: string;
         PerformPreparingHealthCheck?: boolean;
