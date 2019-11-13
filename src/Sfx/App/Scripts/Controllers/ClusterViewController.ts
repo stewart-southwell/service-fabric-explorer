@@ -37,7 +37,10 @@ module Sfx {
 
         //temp
         repairTasks: RepairTask[];
+        completedRepairTasks: RepairTask[];
         repairTaskListSettings: ListSettings;
+        completedRepairTaskListSettings: ListSettings;
+
     }
 
     export class ClusterViewController extends MainViewController {
@@ -94,14 +97,49 @@ module Sfx {
             this.$scope.backupPolicies = this.data.backupPolicies;
             this.$scope.settings = this.settings;
             this.$scope.clusterTimelineGenerator = new ClusterTimelineGenerator();
+            this.refresh();
+
+            this.$scope.nodes.refresh().then( () => {
+                this.$scope.clusterManifest.ensureInitialized().then( ()=> {
+                    //if < 5 seed nodes display warning for SFRP
+                    if(this.$scope.clusterManifest.isSfrpCluster){
+                        this.$scope.nodes.checkSeedNodeCount(5);
+                    }
+                })
+            })
 
             this.$scope.repairTaskListSettings = this.settings.getNewOrExistingListSettings("repair", null,
+            [
+                new ListColumnSetting("raw.TaskId", "TaskId"),
+                new ListColumnSetting("raw.Action", "Action"),
+                new ListColumnSetting("raw.Target.NodeNames", "Target"),
+                new ListColumnSetting("raw.Impact.NodeImpactList", "Impact"),
+                new ListColumnSetting("raw.State", "State"),
+                new ListColumnSetting("raw.History.CreatedUtcTimestamp", "Created at"),
+            ],
+            [new ListColumnSetting(
+                "",
+                "",
+                [],
+                null,
+                (item) => {
+                    let json = `${JSON.stringify(item.raw, null, "&nbsp;")}`;
+                return `<div style="margin-left:20px">${json.replace(new RegExp("\\n", "g"), "<br/>")}</div>`;
+                },
+            -1)],  
+            true,
+            (item) => (Object.keys(item.raw).length > 0),
+            true);
+
+            this.$scope.completedRepairTaskListSettings = this.settings.getNewOrExistingListSettings("completedRepair", null,
                 [
-                    new ListColumnSetting("raw.Action", "Action"),
-                    new ListColumnSetting("raw.State", "State"),
                     new ListColumnSetting("raw.TaskId", "TaskId"),
-                    new ListColumnSetting("raw.History.CompletedUtcTimestamp", "CompletedUtcTimestamp"),
-                    new ListColumnSetting("raw.History.ApprovedUtcTimestamp", "ApprovedUtcTimestamp")
+                    new ListColumnSetting("raw.Action", "Action"),
+                    new ListColumnSetting("raw.Target.NodeNames", "Target"),
+                    new ListColumnSetting("raw.Impact.NodeImpactList", "Impact"),
+                    new ListColumnSetting("raw.ResultStatus", "Result Status"),
+                    new ListColumnSetting("duration", "Duration"),
+                    new ListColumnSetting("raw.History.CreatedUtcTimestamp", "Created at"),
                 ],
                 [new ListColumnSetting(
                     "",
@@ -127,6 +165,7 @@ module Sfx {
                     }
                 })
             })
+
         }
 
         public getNodesForDomains(upgradeDomain: string, faultDomain: string): Node[] {
@@ -158,7 +197,9 @@ module Sfx {
                 }));
 
             promises.push(this.data.restClient.getRepairTasks("",127).then(data => {
-                this.$scope.repairTasks = data.data.map(item => new RepairTask(item))
+                const repairTasks = data.data.map(item => new RepairTask(item));
+                this.$scope.completedRepairTasks = repairTasks.filter(task => task.raw.State === "Completed");
+                this.$scope.repairTasks = repairTasks.filter(task => task.raw.State !== "Completed")
             }))
 
             // For upgrade dashboard
