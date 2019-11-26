@@ -159,34 +159,53 @@
     </div>
 
     <script type="text/ng-template" id="treeViewPanel">
-        <div class="tree-header">
-            <div class="toolbar container-fluid">
-                <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showOkItems}" ng-click="treeCtrl.tree.showOkItems = !treeCtrl.tree.showOkItems">
-                    <sfx-badge badge-class="'badge-ok'" text="'OK'"></sfx-badge>
-                </div>
-                <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showWarningItems}" ng-click="treeCtrl.tree.showWarningItems = !treeCtrl.tree.showWarningItems">
-                    <sfx-badge badge-class="'badge-warning'" text="'Warning'"></sfx-badge>
-                </div>
-                <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showErrorItems}" ng-click="treeCtrl.tree.showErrorItems = !treeCtrl.tree.showErrorItems">
-                    <sfx-badge badge-class="'badge-error'" text="'Error'"></sfx-badge>
-                </div>
-            </div>
-            <sfx-search-bar class="tree-search-bar" custom-class="dark-bg" placeholder="Search Cluster" model="treeCtrl.tree.searchTerm"></sfx-search-bar>
-        </div>
 
-        <div class="tree-body">
-            <div id="treeview-loading-glyph" class="bowtie-icon bowtie-spinner rotate" ng-show="treeCtrl.tree.isLoading">
-            </div>
+        <uib-tabset justified="true">
+            <uib-tab index="0" heading="Tree View">
 
-            <div ng-show="!treeCtrl.tree.isLoading && treeCtrl.tree.isEmpty" class="informative content">
-                <p>Nothing to display</p>
-            </div>
+                <div class="tree-header">
+                    <div class="toolbar container-fluid">
+                        <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showOkItems}" ng-click="treeCtrl.tree.showOkItems = !treeCtrl.tree.showOkItems">
+                            <sfx-badge badge-class="'badge-ok'" text="'OK'"></sfx-badge>
+                        </div>
+                        <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showWarningItems}" ng-click="treeCtrl.tree.showWarningItems = !treeCtrl.tree.showWarningItems">
+                            <sfx-badge badge-class="'badge-warning'" text="'Warning'"></sfx-badge>
+                        </div>
+                        <div class="checkbox-push" ng-class="{active: treeCtrl.tree.showErrorItems}" ng-click="treeCtrl.tree.showErrorItems = !treeCtrl.tree.showErrorItems">
+                            <sfx-badge badge-class="'badge-error'" text="'Error'"></sfx-badge>
+                        </div>
+                    </div>
+                    <sfx-search-bar class="tree-search-bar" custom-class="dark-bg" placeholder="Search Cluster" model="treeCtrl.tree.searchTerm"></sfx-search-bar>
+                </div>
+        
+                <div class="tree-body">
+                    <div id="treeview-loading-glyph" class="bowtie-icon bowtie-spinner rotate" ng-show="treeCtrl.tree.isLoading">
+                    </div>
+        
+                    <div ng-show="!treeCtrl.tree.isLoading && treeCtrl.tree.isEmpty" class="informative content">
+                        <p>Nothing to display</p>
+                    </div>
+        
+                    <div ng-show="!treeCtrl.tree.isLoading && !treeCtrl.tree.isEmpty"
+                         ng-keydown="treeCtrl.tree.onKeyDown($event)" class="tree-view" tabindex="0">
+                        <div sfx-tree-node node="treeCtrl.tree.childGroupViewModel"></div>
+                    </div>
+                </div>
 
-            <div ng-show="!treeCtrl.tree.isLoading && !treeCtrl.tree.isEmpty"
-                 ng-keydown="treeCtrl.tree.onKeyDown($event)" class="tree-view" tabindex="0">
-                <div sfx-tree-node node="treeCtrl.tree.childGroupViewModel"></div>
-            </div>
-        </div>
+            </uib-tab>
+            <uib-tab index="2" heading="Diagnostic">
+                <div style="background-color: #191919; padding: 5px; margin: 15px;">
+                    <a href="">
+                    Image Store Viewer
+                    </a>
+                </div>
+                <div style="background-color: #191919; padding: 5px; margin: 15px;">
+                        <a href="">
+                    Repair Service History
+                    </a>
+                </div>
+            </uib-tab>
+          </uib-tabset>
     </script>
 
     <!-- Nodejs integration for standalone SFX -->

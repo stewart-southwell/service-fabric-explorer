@@ -158,3 +158,24 @@ li.pager-control {
         }
     }
 }
+
+.nav-tabs {
+    border: 1px solid transparent;
+}
+
+.nav>li, .nav>li>a, .nav>li>a:hover, .nav>li:focus {
+    background-color: $tree-node-hover-background-color;
+    border: 1px solid $tree-node-hover-background-color !important;
+    color: white !important;
+}
+
+.nav-tabs.nav-justified>li>a {
+    border-bottom: 0px solid;
+}
+.nav-tabs>li.active>a {
+    border: 1px solid #0075c9 !important;
+    color: white;
+}
+
+
+
